@@ -11,12 +11,15 @@ public class Search {
 
     @Min(value = 1, message = "Number of people must be more than or equals to 1")
     @Max(value = 10, message = "Number of people must be less than or equals to 10")
+    @NotEmpty(message = "Number of people is required")
     private Integer pax;
 
     @Min(value = 1, message = "Price range must be at least 1")
+    @NotEmpty(message = "Min is required")
     private Double min;
 
     @Max(value = 10000, message = "Price range must be at most 10000")
+    @NotEmpty(message = "Max is required")
     private Double max;
 
     public String getCountry() {
