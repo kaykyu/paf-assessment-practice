@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=0, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>MyBnb</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Details</h1>
+        <a data-th-href="${searchUrl}">Back</a>
+        <hr>
+        <br>
+
+        <table class="table table-striped">
+            <tr>
+                <th>Id:</th>
+                <td data-th-text="${listing.id}"></td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td data-th-text="${listing.description}"></td>
+            </tr>
+            <tr>
+                <th>Address</th>
+                <td data-th-text="${listing.address}"></td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td data-th-text="${listing.price}"></td>
+            </tr>
+            <tr>
+                <th>Amenities</th>
+                <td data-th-text="${listing.amenities}"></td>
+            </tr>
+        </table>
+        <hr>
+        <br>
+
+        <h2>Bookings</h2>
+        <form method="POST" data-th-object="${booking}" data-th-action="@{/listings/book/{id}(id=${listing.id})}">
+            <div class="mb-3">
+                <label class="form-label">Name:</label>
+                <input type="text" class="form-control" name="name" data-th-field="*{name}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('name')}" data-th-errors="*{name}"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Email:</label>
+                <input type="email" class="form-control" name="email" data-th-field="*{email}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('email')}" data-th-errors="*{email}"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Arrival:</label>
+                <input type="date" class="form-control" name="date" data-th-field="*{date}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('date')}" data-th-errors="*{date}"></div>
+
+            <div class="mb-3">
+                <label class="form-label">Stay (in days):</label>
+                <input type="number" class="form-control" name="stay" data-th-field="*{duration}" />
+            </div>
+            <div class="alert alert-danger" data-th-if="${#fields.hasErrors('duration')}" data-th-errors="*{duration}">
+            </div>
+
+            <button class="btn btn-primary" type="submit">Book</button>
+        </form>
+        <br>
+        <div class="alert alert-danger" data-th-if="${bookingError}" data-th-text="${bookingError}">
+        </div>
+
+    </div>
+
+</body>
+
+</html>

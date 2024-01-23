@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>MyBnb</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Listings for <span data-th-text="${country}"></span></h1>
+        <a data-th-href="@{/listings}">Back</a>
+        <hr>
+        <br>
+        <table class="table table-striped" data-th-unless="${listings.empty}">
+            <thead>
+                <td>Name</td>
+                <td>Price</td>
+                <td>Image</td>
+                <td>Action</td>
+            </thead>
+            <tr data-th-each="listing: ${listings}">
+                <td data-th-text="${listing.name}"></td>
+                <td data-th-text="${listing.price}"></td>
+                <td><img data-th-src="${listing.image}" width="150"></td>
+                <td><a data-th-href="@{/listings/{id}(id=${listing.id})}" class="btn btn-secondary">Details</a></td>
+            </tr>
+        </table>
+
+        <p data-th-if="${listings.empty}">No listings found.</p>
+
+    </div>
+</body>
+
+</html>
