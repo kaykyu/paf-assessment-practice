@@ -1,1 +1,1 @@
-mongoimport --uri mongodb://mongo:BhgFH23AaHhFGBhc5BFcC3d531ahg-hA@roundhouse.proxy.rlwy.net:28090 --authenticationDatabase=admin --db local --collection listings --file src/main/data/listings.json
+mongoimport --uri mongodb://mongo:{password}@roundhouse.proxy.rlwy.net:28090 --authenticationDatabase=admin --db local --collection listings --file src/main/data/listings.json
