@@ -34,7 +34,7 @@ public class ListingsService {
         Document doc = listRepo.getListing(id);
         StringBuilder sb = new StringBuilder();
 
-        List<Document> amenities = (List<Document>) doc.get("amenities");
+        List<Document> amenities = doc.getList("amenities", Document.class);
         for (int i = 0; i < amenities.size() - 1; i++) {
             sb.append(amenities.get(i));
             sb.append(", ");
