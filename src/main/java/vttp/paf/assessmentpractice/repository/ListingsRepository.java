@@ -10,11 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.GroupOperation;
 import org.springframework.data.mongodb.core.aggregation.MatchOperation;
 import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.aggregation.SortOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
@@ -33,33 +33,11 @@ public class ListingsRepository {
     private JdbcTemplate sqlTemplate;
 
     /*
-    Mongodb query to get country list:
-        db.listings.aggregate([
-        {
-            $project: {
-                _id: "$_id",
-                country: "$address.country"
-                }
-        },
-        {
-            $group: {
-                _id: "$country"
-            }
-        },
-        {
-            $sort: {_id: 1}
-        }
-        ]);
-    */
-    public List<Document> getCountries() {
-
-        ProjectionOperation projectOps = Aggregation.project("$_id")
-                .and("$address.country").as("country");
-        GroupOperation groupOps = Aggregation.group("$country");
-        SortOperation sortOps = Aggregation.sort(Sort.by(Direction.ASC, "_id"));
-
-        Aggregation pipeline = Aggregation.newAggregation(projectOps, groupOps, sortOps);
-        return mongoTemplate.aggregate(pipeline, "listings", Document.class).getMappedResults();
+     * Mongodb query to get country list:
+     * db.listings.distinct("address.country")
+     */
+    public List<String> getCountries() {
+        return mongoTemplate.findDistinct(new Query(), "address.country", "listings", String.class);
     }
 
     /*
@@ -71,7 +49,7 @@ public class ListingsRepository {
                 $gte: 1,
                 $lte: 10000
             },
-            "address.country": "Australia",
+            "address.country": {$regex: "Australia", $options: "i"},
             accommodates: {$gte: 5}
         }
     },
@@ -91,7 +69,7 @@ public class ListingsRepository {
     public List<Document> getListings(Search search) {
 
         MatchOperation matchOps = Aggregation.match(Criteria.where("price").lte(search.getMax()).gte(search.getMin())
-                .and("address.country").is(search.getCountry()));
+                .and("address.country").regex(search.getCountry(), "i"));
         ProjectionOperation projectOps = Aggregation.project("_id")
                 .and("$name").as("name")
                 .and("$price").as("price")

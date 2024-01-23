@@ -19,10 +19,7 @@ public class ListingsService {
     ListingsRepository listRepo;
 
     public List<String> getCountries() {
-        return listRepo.getCountries()
-                .stream()
-                .map(doc -> doc.getString("_id"))
-                .toList();
+        return listRepo.getCountries();
     }
     
     public List<Listings> getListings(Search search) {
