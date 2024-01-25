@@ -83,31 +83,21 @@ public class ListingsRepository {
 
     /*
     Mongodb query to get listing
-    db.listings.aggregate([
+    db.listings.find(
+    {_id: "30167073"},
     {
-        $match: {_id: "30167073"}
-    },
-    {
-        $project: {
-            _id: "$_id",
-            description: "$description",
-            address: "$address.street",
-            price: "$price",
-            amenities: "$amenities"
-        }
-    }]);
+        description: 1,
+        address: 1,
+        price: 1,
+        amenities: 1
+    });
     */
     public Document getListing(String id) {
 
-        MatchOperation matchOps = Aggregation.match(Criteria.where("_id").is(id));
-        ProjectionOperation projectOps = Aggregation.project("_id")
-                .and("$description").as("description")
-                .and("$address.street").as("address")
-                .and("$price").as("price")
-                .and("$amenities").as("amenities");
+        Query query = new Query(Criteria.where("_id").is(id));
+        query.fields().include("description", "address", "price", "amenities");
 
-        Aggregation pipeline = Aggregation.newAggregation(matchOps, projectOps);
-        return mongoTemplate.aggregate(pipeline, "listings", Document.class).getMappedResults().get(0);
+        return mongoTemplate.findOne(query, Document.class, "listings");
     }
 
     public Integer getVacancy(String id) {

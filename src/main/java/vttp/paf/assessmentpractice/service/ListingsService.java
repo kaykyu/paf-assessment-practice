@@ -34,7 +34,10 @@ public class ListingsService {
         Document doc = listRepo.getListing(id);
         StringBuilder sb = new StringBuilder();
 
-        List<Document> amenities = doc.getList("amenities", Document.class);
+        Document add = doc.get("address", Document.class);
+        String address = "%s, %s, %s".formatted(add.getString("street"), add.getString("suburb"), add.getString("country"));
+
+        List<String> amenities = doc.getList("amenities", String.class);
         for (int i = 0; i < amenities.size() - 1; i++) {
             sb.append(amenities.get(i));
             sb.append(", ");
@@ -43,7 +46,7 @@ public class ListingsService {
 
         return new Listing(doc.getString("_id"),
                 doc.getString("description"),
-                doc.getString("address"),
+                address,
                 doc.getDouble("price"),
                 sb.toString());
     }
