@@ -69,7 +69,8 @@ public class ListingsRepository {
     public List<Document> getListings(Search search) {
 
         MatchOperation matchOps = Aggregation.match(Criteria.where("price").lte(search.getMax()).gte(search.getMin())
-                .and("address.country").regex(search.getCountry(), "i"));
+                .and("address.country").regex(search.getCountry(), "i")
+                .and("accommodates").gte(search.getPax()));
         ProjectionOperation projectOps = Aggregation.project("_id")
                 .and("$name").as("name")
                 .and("$price").as("price")
